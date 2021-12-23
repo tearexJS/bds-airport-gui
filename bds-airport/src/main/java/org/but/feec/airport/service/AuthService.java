@@ -1,9 +1,9 @@
 package org.but.feec.airport.service;
 
-//import org.but.feec.airport.data.PersonRepository;
+import org.but.feec.airport.data.*;
 
 public class AuthService {
-    private EmployeeRepository EmployeeRepository;
+    private EmployeeRepository employeeRepository;
     
     public AuthService(EmployeeRepository employeeRepository ){
         this.employeeRepository=employeeRepository;
