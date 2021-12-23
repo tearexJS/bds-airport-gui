@@ -1,0 +1,4 @@
+# Maven
+logs/
+*.log
+target/
