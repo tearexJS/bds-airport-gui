@@ -1,7 +1,7 @@
 package org.but.feec.airport.controller;
 
 import org.but.feec.airport.App;
-import org.but.feec.airport.data.PersonRepository;
+import org.but.feec.airport.data.EmployeeRepository;
 //import org.but.feec.airport.exceptions.DataAccessException;
 //import org.but.feec.airport.exceptions.ExceptionHandler;
 //import org.but.feec.airport.exceptions.ResourceNotFoundException;
@@ -44,7 +44,7 @@ public class LoginController {
     @FXML
     private PasswordField passwordTextField;
 
-    private PersonRepository personRepository;
+    private EmployeeRepository personRepository;
     private AuthService authService;
 
     private ValidationSupport validation;
@@ -83,7 +83,7 @@ public class LoginController {
     }
 
     private void initializeServices() {//voláme logiku controlleru
-        personRepository = new PersonRepository();
+        personRepository = new EmployeeRepository();
         authService = new AuthService(personRepository);
     }
 
