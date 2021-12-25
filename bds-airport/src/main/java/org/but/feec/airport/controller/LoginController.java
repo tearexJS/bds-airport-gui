@@ -2,9 +2,7 @@ package org.but.feec.airport.controller;
 
 import org.but.feec.airport.App;
 import org.but.feec.airport.data.EmployeeRepository;
-//import org.but.feec.airport.exceptions.DataAccessException;
-//import org.but.feec.airport.exceptions.ExceptionHandler;
-//import org.but.feec.airport.exceptions.ResourceNotFoundException;
+import org.but.feec.airport.exceptions.*;
 import org.but.feec.airport.service.AuthService;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -111,7 +109,7 @@ public class LoginController {
             } else {
                 showInvalidPaswordDialog();
             }
-        } catch (ResourceNotFoundException | DataAccessException e) {
+        } catch (Exception e) {
             showInvalidPaswordDialog();
         }
     }
