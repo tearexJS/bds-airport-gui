@@ -1,21 +1,15 @@
 package org.but.feec.airport.controller;
 
-import org.but.feec.airport.App;
 import org.but.feec.airport.data.EmployeeRepository;
-import org.but.feec.airport.exceptions.*;
 import org.but.feec.airport.service.AuthService;
-import de.jensd.fx.glyphs.GlyphsDude;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import org.but.feec.airport.App;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -23,132 +17,103 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javafx.fxml.FXML;
 
 import java.io.IOException;
-import java.util.Optional;
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @FXML
-    public Label usernameLabel;
-    @FXML
-    public Label passwordLabel;
-    @FXML
-    public Label vutLogo;
-    @FXML
-    private Button signInButton;
-    @FXML
-    private TextField usernameTextfield;
-    @FXML
-    private PasswordField passwordTextField;
+    private TextField emailField;
 
-    private EmployeeRepository personRepository;
-    private AuthService authService;
+    @FXML
+    private Label emailLabel;
 
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private Label passwordLabel;
+
+    private EmployeeRepository employee;
+    private AuthService auth;
     private ValidationSupport validation;
-
-    public LoginController() {
-    }
 
     @FXML
     private void initialize() {
-        GlyphsDude.setIcon(signInButton, FontAwesomeIcon.SIGN_IN, "1em");
-        GlyphsDude.setIcon(usernameLabel, FontAwesomeIcon.USER, "2em");
-        GlyphsDude.setIcon(passwordLabel, FontAwesomeIcon.USER_SECRET, "2em");
-        usernameTextfield.setOnKeyPressed(event -> {//skrátený zápis anonymnej funkcie
-            if (event.getCode() == KeyCode.ENTER) {//zavolá sa enterom metóda
-                handleSignIn();
-            }
-        });
-        passwordTextField.setOnKeyPressed(event -> {
+        emailField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 handleSignIn();
             }
         });
-
-        initializeLogos();
-        initializeServices();
+        passwordField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleSignIn();
+            }
+        });
         initializeValidations();
-
+        initializeServices();
         logger.info("LoginController initialized");
     }
-
-    private void initializeValidations() {
+    private void initializeValidations(){
         validation = new ValidationSupport();
-        validation.registerValidator(usernameTextfield, Validator.createEmptyValidator("The username must not be empty."));
-        validation.registerValidator(passwordTextField, Validator.createEmptyValidator("The password must not be empty."));
-        signInButton.disableProperty().bind(validation.invalidProperty());
+        validation.registerValidator(emailField, Validator.createEmptyValidator("The username must not be empty."));
+        validation.registerValidator(passwordField, Validator.createEmptyValidator("The password must not be empty."));
+        loginButton.disableProperty().bind(validation.invalidProperty());
     }
-
-    private void initializeServices() {//voláme logiku controlleru
-        personRepository = new EmployeeRepository();
-        authService = new AuthService(personRepository);
+    private void initializeServices(){
+        employee = new EmployeeRepository();
+        auth = new AuthService(employee);
     }
+    private void handleSignIn() {
+        String email = emailField.getText();
+        String password = passwordField.getText();
 
-    private void initializeLogos() {
-        Image vutImage = new Image(App.class.getResourceAsStream("logos/vut-logo-eng.png"));
-        ImageView vutLogoImage = new ImageView(vutImage);
-        vutLogoImage.setFitHeight(85);
-        vutLogoImage.setFitWidth(150);
-        vutLogoImage.setPreserveRatio(true);
-        vutLogo.setGraphic(vutLogoImage);
-    }
-
-    public void signInActionHandler(ActionEvent event) {
-        handleSignIn();
-    } //metóda ktorá mapuje
-
-    private void handleSignIn() { //či sedia prihlasovacie údaje
-        String username = usernameTextfield.getText();
-        String password = passwordTextField.getText();
-
-       try {
-            boolean authenticated = authService.authenticate(username, password);
+        try {
+            boolean authenticated = auth.authenticate(email, password);
             if (authenticated) {
-                showPersonsView();
+                showGoodLogin();
             } else {
-                showInvalidPaswordDialog();
+                showBadLogin();
             }
         } catch (Exception e) {
-            showInvalidPaswordDialog();
+            showBadLogin();
         }
     }
-
-    private void showPersonsView() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(App.class.getResource("fxml/Persons.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 1050, 600);
-            Stage stage = new Stage();
-            stage.setTitle("BDS Airport App");
-            stage.setScene(scene);
-
-            Stage stageOld = (Stage) signInButton.getScene().getWindow();
-            stageOld.close();
-
-            stage.getIcons().add(new Image(App.class.getResourceAsStream("logos/vut.jpg")));
-            authConfirmDialog();
-
-            stage.show();
-        } catch (IOException ex) {
-           // ExceptionHandler.handleException(ex);
-        }
-    }
-
-    private void showInvalidPaswordDialog() {
+    private void showBadLogin() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Unauthenticated");
-        alert.setHeaderText("The user is not authenticated");
-        alert.setContentText("Please provide a valid username and password");//ww  w . j  a  va2s  .  co  m
-
+        alert.setTitle("Wrong credentials");
+        alert.setHeaderText("Wrong login or password!");
         alert.showAndWait();
     }
+    private void handleGoodLogin() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(App.class.getResource("fxml/Main.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 614, 350);
+            Stage stage = new Stage();
+            stage.setTitle("Your courses");
+            stage.setScene(scene);
 
+            Stage stageOld = (Stage) loginButton.getScene().getWindow();
+            stageOld.close();
 
-    private void authConfirmDialog() {
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            logger.error(String.format("Couldn't proceed after a good login beacause of FXML loading error!\nMessage: %s", e.getMessage()));
+        }
+        showGoodLogin();
+    }
+    private void showGoodLogin() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Logging confirmation");
-        alert.setHeaderText("You were successfully logged in.");
+        alert.setTitle("Login successful");
+        alert.setHeaderText("Login successful!");
+        alert.setContentText("You may proceed to the application now.");
 
         Timeline idlestage = new Timeline(new KeyFrame(Duration.seconds(3), new EventHandler<ActionEvent>() {
 
@@ -161,18 +126,8 @@ public class LoginController {
         idlestage.setCycleCount(1);
         idlestage.play();
 
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == ButtonType.OK) {
-            System.out.println("ok clicked");
-        } else if (result.get() == ButtonType.CANCEL) {
-            System.out.println("cancel clicked");
-        }
-    }
-
-    public void handleOnEnterActionPassword(ActionEvent dragEvent) {
-        handleSignIn();
+        alert.showAndWait();
     }
 }
-
+    
 

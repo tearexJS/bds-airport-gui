@@ -16,7 +16,7 @@ public class AuthService {
         }
         EmployeeAuthView employee = employeeRepository.findEmployeeByEmail(email);
         if(employee == null){
-
+            return false;
         }
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), employee.getPassword());
         return result.verified;

@@ -12,7 +12,7 @@ public class EmployeeRepository {
     
     public EmployeeAuthView findEmployeeByEmail(String email){
         try(Connection conn = DataSourceConfig.getConnection();
-            PreparedStatement statement = conn.prepareStatement("SELECT email, password FROM employee WHERE email=?")
+            PreparedStatement statement = conn.prepareStatement("SELECT email, password FROM airport.employee WHERE email=?")
         ){
             statement.setString(1, email);
             try(ResultSet rs = statement.executeQuery()){
@@ -21,6 +21,7 @@ public class EmployeeRepository {
 
             }
         }catch(SQLException e){
+            e.printStackTrace();
             //TODO: create custom exceptions
         }
         return null;
@@ -29,7 +30,7 @@ public class EmployeeRepository {
     private EmployeeAuthView mapToEmployeeAuthView(ResultSet rs) throws SQLException{
         EmployeeAuthView employee = new EmployeeAuthView();
         employee.setEmail(rs.getString("email"));
-        employee.setPassword("password");
+        employee.setPassword(rs.getString("password"));
         return employee;
     }
 
