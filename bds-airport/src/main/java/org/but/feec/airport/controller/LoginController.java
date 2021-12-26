@@ -1,6 +1,6 @@
 package org.but.feec.airport.controller;
 
-import org.but.feec.airport.data.EmployeeRepository;
+import org.but.feec.airport.data.LoginRepository;
 import org.but.feec.airport.service.AuthService;
 import org.but.feec.airport.App;
 import javafx.animation.KeyFrame;
@@ -38,7 +38,7 @@ public class LoginController {
     @FXML
     private Label passwordLabel;
 
-    private EmployeeRepository employee;
+    private LoginRepository employee;
     private AuthService auth;
     private ValidationSupport validation;
 
@@ -65,7 +65,7 @@ public class LoginController {
         loginButton.disableProperty().bind(validation.invalidProperty());
     }
     private void initializeServices(){
-        employee = new EmployeeRepository();
+        employee = new LoginRepository();
         auth = new AuthService(employee);
     }
     private void handleSignIn() {
@@ -75,15 +75,15 @@ public class LoginController {
         try {
             boolean authenticated = auth.authenticate(email, password);
             if (authenticated) {
-                showGoodLogin();
+                showAuthSucces();
             } else {
-                showBadLogin();
+                showAuthFailed();
             }
         } catch (Exception e) {
-            showBadLogin();
+            showAuthFailed();
         }
     }
-    private void showBadLogin() {
+    private void showAuthFailed() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Wrong credentials");
         alert.setHeaderText("Wrong login or password!");
@@ -107,9 +107,9 @@ public class LoginController {
             e.printStackTrace();
             logger.error(String.format("Couldn't proceed after a good login beacause of FXML loading error!\nMessage: %s", e.getMessage()));
         }
-        showGoodLogin();
+        showAuthSucces();
     }
-    private void showGoodLogin() {
+    private void showAuthSucces() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Login successful");
         alert.setHeaderText("Login successful!");

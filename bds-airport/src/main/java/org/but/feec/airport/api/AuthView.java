@@ -3,10 +3,11 @@ package org.but.feec.airport.api;
 /**
  * EmployeeAuthView
  */
-public class EmployeeAuthView {
+public class AuthView {
 
     private String email;
     private String password;
+    private String tab;
 
     public String getEmail() {
         return email;
@@ -15,7 +16,9 @@ public class EmployeeAuthView {
     public String getPassword() {
         return password;
     }
-
+    public String getTab() {
+        return tab;
+    }
     public void setEmail(String email) {
         this.email = email;
     }
@@ -23,7 +26,9 @@ public class EmployeeAuthView {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    public void setTab(String tab) {
+        this.tab = tab;
+    }
     @Override
     public String toString() {
         return "EmployeeAuthView{" +
