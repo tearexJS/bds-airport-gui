@@ -111,7 +111,7 @@ public class LoginController {
         }
         catch (IOException e) {
             e.printStackTrace();
-            logger.error(String.format("Couldn't proceed after a good login beacause of FXML loading error!\nMessage: %s", e.getMessage()));
+            logger.error(String.format("Authentication successful but a FXML loading error occured", e.getMessage()));
         }
         showAuthSucces();
     }
@@ -120,7 +120,7 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(App.class.getResource("fxml/AdminView.fxml"));
 
-            Scene scene = new Scene(fxmlLoader.load(), 634, 851);
+            Scene scene = new Scene(fxmlLoader.load(), 851, 634);
             Stage stage = new Stage();
 
             stage.setTitle("Passengers");

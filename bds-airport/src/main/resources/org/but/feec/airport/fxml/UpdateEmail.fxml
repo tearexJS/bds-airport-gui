@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.but.feec.airport.controller.UpdatePassengerEmail">
+   <children>
+      <Label layoutX="147.0" layoutY="40.0" text="Change passenger e-mail">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="oldEmailField" layoutX="187.0" layoutY="140.0" prefHeight="24.0" prefWidth="211.0" />
+      <TextField fx:id="newEmailField" layoutX="187.0" layoutY="194.0" prefHeight="24.0" prefWidth="211.0" />
+      <Label layoutX="60.0" layoutY="144.0" text="Old e-rmail" />
+      <Label layoutX="60.0" layoutY="198.0" text="New e-mail" />
+      <Button fx:id="submit" layoutX="336.0" layoutY="238.0" mnemonicParsing="false" onAction="#handleUpdateEmail" text="Submit" />
+   </children>
+</AnchorPane>

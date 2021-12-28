@@ -1,6 +1,6 @@
 package org.but.feec.airport.data;
 
-import org.but.feec.airport.api.AdminView;
+import org.but.feec.airport.api.Passenger;
 import org.but.feec.airport.config.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,10 @@ import java.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class AdminRepository {
     private static final Logger logger = LoggerFactory.getLogger(AdminRepository.class);
-    public List<AdminView> showAllPassengers(){
+    public List<Passenger> showAllPassengers(){
 
         try(Connection conn = DataSourceConfig.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT p.first_name, p.surname, p.id_contact, c.password, c.phone_number, c.email FROM airport.passenger p JOIN airport.contact c ON c.id_contact = p.id_contact")
@@ -23,79 +22,23 @@ public class AdminRepository {
         }
         return null;
     }
-    private List<AdminView> mapToAdminView(PreparedStatement statement){
-        List<AdminView> allPassengers = new ArrayList<>();
-        try(ResultSet rs = statement.executeQuery()){
-            while(rs.next()){
-                AdminView adminView = new AdminView();
-                adminView.setName(rs.getString("first_name"));
-                adminView.setSurname(rs.getString("surname"));
-                adminView.setContactId(rs.getInt("id_contact"));
-                adminView.setEmail(rs.getString("email"));
-                adminView.setPhoneNumber(rs.getString("phone_number"));
-                adminView.setPassword(rs.getString("password"));
 
-                allPassengers.add(adminView);
-            }
-            return allPassengers;
-        }catch(SQLException e){
-            logger.error("Query to retrieve all passengers failed"+e.getMessage());
-        }
-        return null;
-    }
-    public Boolean addPassenger(AdminView adminView){
-        String hashedPassword = hashPassword(adminView.getPassword().toCharArray());
-        try(Connection conn = DataSourceConfig.getConnection()){
-            try(PreparedStatement insertContact = conn.prepareStatement("INSERT INTO airport.contact (email, phone_number, password) VALUES(?, ?, ?)");
-                PreparedStatement insertPassenger = conn.prepareStatement("INSERT INTO airport.passenger (first_name, surname, id_contact) VALUES (?, ?, (SELECT id_contact FROM airport.contact WHERE email=?))");
-            ){
-                conn.setAutoCommit(false);
-                insertContact.setString(1, adminView.getEmail());
-                insertContact.setString(2, adminView.getPhoneNumber());
-                insertContact.setString(3, hashedPassword);
-                insertContact.executeUpdate();
-
-                insertPassenger.setString(1, adminView.getName());
-                insertPassenger.setString(2, adminView.getSurname());
-                insertPassenger.setString(3, adminView.getEmail());
-                insertPassenger.executeUpdate();
-                conn.commit();
-                return true;
-            }catch(SQLException e){
-                conn.rollback();
-            }
-        }catch(SQLException e){
-            logger.error("Something went wrong while connecting to the database"+e.getMessage());
-        }
-        return false;
-    }
-    public AdminView findPassengerBySurname(String surname){
+    public Passenger findPassengerBySurname(String surname){
         try(Connection conn = DataSourceConfig.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT p.first_name, p.surname, p.id_contact, c.password, c.phone_number, c.email FROM airport.passenger p JOIN airport.contact c ON c.id_contact = p.id_contact WHERE p.surname=?");
+            ResultSet rs = statement.executeQuery()
         ){
-            return mapToAdminsView(statement);
+            return mapToAdminsView(rs);
         }catch(SQLException e){
             logger.error("Query to find passenger by surname failed"+ e.getMessage());
         }
         return null;
     }
-    public Boolean deletePassenger(String email){
-        try(Connection conn = DataSourceConfig.getConnection();
-            PreparedStatement deleteStatement = conn.prepareStatement("DELETE FROM airport.contact WHERE email=?")
-        ){
-            deleteStatement.executeQuery();
-            return true;
-        }catch(SQLException e){
-            logger.error("Failed to execute delete query");
-        }
-        return false;
-    }
-    // public Boolean updatePassenger(String name, String surname, String email){
 
-    // }
-    private AdminView mapToAdminsView(PreparedStatement statement){
-        AdminView adminView = new AdminView();
-        try(ResultSet rs = statement.executeQuery()){
+
+    private Passenger mapToAdminsView(ResultSet rs){
+        Passenger adminView = new Passenger();
+        try{
             adminView.setName(rs.getString("first_name"));
             adminView.setSurname(rs.getString("surname"));
             adminView.setEmail(rs.getString("email"));
@@ -104,12 +47,23 @@ public class AdminRepository {
             adminView.setContactId(rs.getLong("id_contact"));
             return adminView;
         }catch(SQLException e){
-            logger.error("Query to find passenger by surname failed"+ e.getMessage());
+            logger.error("Mapping to admin view raised an exception" + e.getMessage());
         }
         return null;
     }
-     private String hashPassword(char[] plainPassword){
-        String hashedPassword = BCrypt.withDefaults().hashToString(12, plainPassword);
-        return hashedPassword;
-     }
+    private List<Passenger> mapToAdminView(PreparedStatement statement){
+        List<Passenger> allPassengers = new ArrayList<>();
+        try(ResultSet rs = statement.executeQuery()){
+            while(rs.next()){
+
+                Passenger adminView = mapToAdminsView(rs);
+                allPassengers.add(adminView);
+            }
+            return allPassengers;
+        }catch(SQLException e){
+            logger.error("Query to retrieve all passengers failed"+e.getMessage());
+        }
+        return null;
+    }
+
 }

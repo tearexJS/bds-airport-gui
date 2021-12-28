@@ -5,7 +5,7 @@ package org.but.feec.airport.api;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class AdminView {
+public class Passenger {
     private SimpleStringProperty name = new SimpleStringProperty();
     private SimpleStringProperty surname = new SimpleStringProperty();
     private SimpleStringProperty email = new SimpleStringProperty();
@@ -50,4 +50,5 @@ public class AdminView {
     public void setContactId(long contactId) {
         this.contactId.setValue(contactId);
     }
+    // TODO: implement toString()
 }
