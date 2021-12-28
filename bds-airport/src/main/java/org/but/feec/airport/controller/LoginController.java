@@ -73,11 +73,17 @@ public class LoginController {
         String password = passwordField.getText();
 
         try {
-            boolean authenticated = auth.authenticate(email, password);
-            if (authenticated) {
-                showAuthSucces();
-            } else {
-                showAuthFailed();
+            int authenticated = auth.authenticate(email, password);
+            switch(authenticated){
+                case 1:
+                    showAuthSucces();
+                    break;
+                case 2:
+                    showAuthSucces();
+                    handleAdminLogin();
+                    break;
+                default:
+                    showAuthFailed();
             }
         } catch (Exception e) {
             showAuthFailed();
@@ -89,7 +95,7 @@ public class LoginController {
         alert.setHeaderText("Wrong login or password!");
         alert.showAndWait();
     }
-    private void handleGoodLogin() {
+    private void handlePassengerLogin() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(App.class.getResource("fxml/Main.fxml"));
@@ -108,6 +114,28 @@ public class LoginController {
             logger.error(String.format("Couldn't proceed after a good login beacause of FXML loading error!\nMessage: %s", e.getMessage()));
         }
         showAuthSucces();
+    }
+    private void handleAdminLogin(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(App.class.getResource("fxml/AdminView.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load(), 634, 851);
+            Stage stage = new Stage();
+
+            stage.setTitle("Passengers");
+            stage.setScene(scene);
+
+            Stage stageOld = (Stage) loginButton.getScene().getWindow();
+            stageOld.close();
+
+            stage.show();
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.error("Authentication successful but a FXML loading error occured", e.getMessage());
+        }
+
+
     }
     private void showAuthSucces() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

@@ -10,15 +10,26 @@ public class AuthService {
         this.loginRepository=loginRepository;
     }
 
-    public boolean authenticate(String email, String password){
+    public int authenticate(String email, String password){
         if(email == null || password == null || email.isEmpty() || password.isEmpty()){
-            return false;
+            return 0;
         }
         AuthView employee = loginRepository.findPersonByEmail(email);
         if(employee == null){
-            return false;
+            return 0;
         }
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), employee.getPassword());
-        return result.verified;
+        if(!result.verified){
+            return 0;
+        }
+        switch(employee.getTab()){
+            case "passenger":
+                return 1;
+            case "Admin":
+                return 2;
+            default:
+                return 0;
+        }
+        
     }
 }

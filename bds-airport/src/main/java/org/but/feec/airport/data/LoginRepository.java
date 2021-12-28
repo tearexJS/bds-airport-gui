@@ -12,7 +12,7 @@ public class LoginRepository {
     
     public AuthView findPersonByEmail(String email){
         try(Connection conn = DataSourceConfig.getConnection();
-            PreparedStatement statement = conn.prepareStatement("SELECT email, password, tab FROM(SELECT email, password, 'employee' as tab FROM airport.employee UNION SELECT email, password, 'passenger' as tab FROM airport.contact) AS person WHERE email = ?")
+            PreparedStatement statement = conn.prepareStatement("SELECT email, password, role FROM(SELECT email, password, position AS role FROM airport.employee JOIN airport.employee_type ON employee.id_employee_type = employee_type.id_employee_type UNION SELECT email, password, 'passenger' AS role FROM airport.contact) AS person WHERE email = ?")
         ){
             statement.setString(1, email);
             try(ResultSet rs = statement.executeQuery()){
@@ -22,7 +22,7 @@ public class LoginRepository {
             }
         }catch(SQLException e){
             e.printStackTrace();
-            //TODO: create custom exceptions
+            //TODO: implement logger
         }
         return null;
     }
@@ -31,7 +31,7 @@ public class LoginRepository {
         AuthView person = new AuthView();
         person.setEmail(rs.getString("email"));
         person.setPassword(rs.getString("password"));
-        person.setTab(rs.getString("tab"));
+        person.setTab(rs.getString("role"));
         return person;
     }
 

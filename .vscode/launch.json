@@ -8,14 +8,14 @@
             "type": "java",
             "name": "Launch Current File",
             "request": "launch",
-            "vmArgs": "--module-path /bin/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml", 
+            "vmArgs": "--module-path /bin/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics", 
             "mainClass": "${file}"
         },
         {
             "type": "java",
             "name": "Launch App",
             "request": "launch",
-            "vmArgs": "--module-path /bin/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml", 
+            "vmArgs": "--module-path /bin/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics", 
             "mainClass": "org.but.feec.airport.App",
             "projectName": "bds-airport"
         },
@@ -23,7 +23,7 @@
             "type": "java",
             "name": "Launch Main",
             "request": "launch",
-            "vmArgs": "--module-path /bin/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml", 
+            "vmArgs": "--module-path /bin/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics", 
             "mainClass": "org.but.feec.airport.Main",
             "projectName": "bds-airport"
         }
