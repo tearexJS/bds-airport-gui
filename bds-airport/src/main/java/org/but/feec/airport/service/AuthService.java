@@ -3,6 +3,7 @@ package org.but.feec.airport.service;
 import org.but.feec.airport.api.AuthView;
 import org.but.feec.airport.data.*;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+
 public class AuthService {
     private LoginRepository loginRepository;
     
@@ -22,6 +23,9 @@ public class AuthService {
         if(!result.verified){
             return 0;
         }
+
+        EmailHolderService.getInstance().setEmail(email);
+        
         switch(employee.getTab()){
             case "passenger":
                 return 1;

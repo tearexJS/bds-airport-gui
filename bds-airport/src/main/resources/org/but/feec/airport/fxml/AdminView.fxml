@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="851.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.but.feec.airport.controller.AdminViewController">
    <children>
@@ -20,15 +21,17 @@
         </columns>
       </TableView>
       <Button fx:id="addPassenger" layoutX="89.0" layoutY="540.0" mnemonicParsing="false" onAction="#handleAddPassenger" prefHeight="24.0" prefWidth="133.0" text="Add passenger" />
-      <Button fx:id="refresh" layoutX="738.0" layoutY="150.0" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="24.0" prefWidth="73.0" text="Refresh" />
-      <Label layoutX="228.0" layoutY="15.0" prefHeight="47.0" prefWidth="396.0" text="Passengers: admin's view" textAlignment="CENTER">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
+      <Button fx:id="refresh" layoutX="738.0" layoutY="113.0" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="24.0" prefWidth="73.0" text="Refresh" />
       <Button fx:id="showAll" layoutX="738.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleShowAll" text="Show all" />
-      <Button fx:id="search" layoutX="738.0" layoutY="113.0" mnemonicParsing="false" onAction="#handleOnSerach" prefHeight="24.0" prefWidth="73.0" text="Search" />
+      <Button fx:id="search" layoutX="657.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleOnSearch" prefHeight="24.0" prefWidth="73.0" text="Search" />
       <Button fx:id="deletePassenger" layoutX="343.0" layoutY="540.0" mnemonicParsing="false" onAction="#handleDeletePassenger" text="Delete passenger" />
       <Button fx:id="update" layoutX="597.0" layoutY="540.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="24.0" prefWidth="133.0" text="Update" />
+      <TextField fx:id="surnameField" layoutX="232.0" layoutY="28.0" prefHeight="24.0" prefWidth="412.0" promptText="Surname" />
+      <MenuButton layoutX="23.0" layoutY="16.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="105.0" text="Tables">
+        <items>
+          <MenuItem fx:id="injectionTable" mnemonicParsing="false" onAction="#switchToInjection" text="SQL injection training" />
+          <MenuItem fx:id="employeeTable" mnemonicParsing="false" onAction="#switchToEmployees" text="Employees" />
+        </items>
+      </MenuButton>
    </children>
 </AnchorPane>

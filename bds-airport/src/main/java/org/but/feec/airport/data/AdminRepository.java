@@ -16,19 +16,20 @@ public class AdminRepository {
         try(Connection conn = DataSourceConfig.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT p.first_name, p.surname, p.id_contact, c.password, c.phone_number, c.email FROM airport.passenger p JOIN airport.contact c ON c.id_contact = p.id_contact")
         ){
-            return mapToAdminView(statement);
+            return mapToAdminsViewList(statement);
         }catch(SQLException e){
             logger.error("Query to retrieve all passengers failed"+e.getMessage());
         }
         return null;
     }
 
-    public Passenger findPassengerBySurname(String surname){
+    public List<Passenger> findPassengerBySurname(String surname){
         try(Connection conn = DataSourceConfig.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT p.first_name, p.surname, p.id_contact, c.password, c.phone_number, c.email FROM airport.passenger p JOIN airport.contact c ON c.id_contact = p.id_contact WHERE p.surname=?");
-            ResultSet rs = statement.executeQuery()
         ){
-            return mapToAdminsView(rs);
+            statement.setString(1, surname);
+            List<Passenger> result = mapToAdminsViewList(statement);
+            return result;
         }catch(SQLException e){
             logger.error("Query to find passenger by surname failed"+ e.getMessage());
         }
@@ -51,7 +52,7 @@ public class AdminRepository {
         }
         return null;
     }
-    private List<Passenger> mapToAdminView(PreparedStatement statement){
+    private List<Passenger> mapToAdminsViewList(PreparedStatement statement){
         List<Passenger> allPassengers = new ArrayList<>();
         try(ResultSet rs = statement.executeQuery()){
             while(rs.next()){

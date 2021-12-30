@@ -16,9 +16,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.MenuItem;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class AdminViewController {
@@ -63,8 +67,18 @@ public class AdminViewController {
     @FXML
     private Button deletePassenger;
 
+    @FXML
+    private TextField surnameField;
+
+    @FXML
+    private MenuItem employeeTable;
+
+    @FXML
+    private MenuItem injectionTable;
+
     private AdminRepository adminRepository;
     private AdminService adminService;
+    private ValidationSupport validation;
 
     @FXML
     private void initialize(){
@@ -76,16 +90,20 @@ public class AdminViewController {
         passengerPassword.setCellValueFactory(new PropertyValueFactory<Passenger, String>("password"));
 
         initializeServices();
+        initializeValidations();
         List<Passenger> list = adminService.showAllPassengers();
         ObservableList<Passenger> adminViewList = FXCollections.observableArrayList(list);
         adminsView.setItems(adminViewList);
-   
     }
     private void initializeServices(){
         this.adminRepository = new AdminRepository();
         this.adminService = new AdminService(adminRepository);
     }
-    
+    private void initializeValidations(){
+        validation = new ValidationSupport();
+        validation.registerValidator(surnameField, Validator.createEmptyValidator("In order to search it's required to fill this field"));
+        search.disableProperty().bind(validation.invalidProperty());
+    }
     @FXML
     void handleAddPassenger(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -99,15 +117,21 @@ public class AdminViewController {
     }
 
     @FXML
-    void handleOnSerach(ActionEvent event) {
-
+    void handleOnSearch(ActionEvent event) {
+        List<Passenger> list = adminService.findPassengers(surnameField.getText());
+        ObservableList<Passenger> adminViewList = FXCollections.observableArrayList(list);
+        adminsView.getItems().clear();
+        adminsView.setItems(adminViewList);
     }
 
     @FXML
     void handleRefresh(ActionEvent event) {
-
+        List<Passenger> list = adminService.showAllPassengers();
+        ObservableList<Passenger> adminViewList = FXCollections.observableArrayList(list);
+        adminsView.getItems().clear();
+        adminsView.setItems(adminViewList);
     }
-
+    //TODO: delete this
     @FXML
     void handleShowAll(ActionEvent event) {
 
@@ -118,8 +142,20 @@ public class AdminViewController {
         FXMLLoader fxmlLoader = new FXMLLoader();
         loadFxml(fxmlLoader, "fxml/UpdateEmail.fxml", "Change email");
     }
+    @FXML
+    void switchToEmployees(ActionEvent event) {
 
-    private void loadFxml(FXMLLoader fxmlLoader ,String path, String title){
+    }
+
+    @FXML
+    void switchToInjection(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        loadFxml(fxmlLoader, "fxml/InjectionView.fxml", "Injection training");
+        Stage stageOld = (Stage) update.getScene().getWindow();
+        stageOld.close();
+    }
+
+    private void loadFxml(FXMLLoader fxmlLoader, String path, String title){
         try{
             fxmlLoader.setLocation(App.class.getResource(path));
 

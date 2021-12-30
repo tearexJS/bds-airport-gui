@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="613.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.but.feec.airport.controller.InjectionController">
+   <children>
+      <TableView fx:id="injectionView" layoutX="136.0" layoutY="74.0" prefHeight="286.0" prefWidth="357.0">
+        <columns>
+          <TableColumn fx:id="elementName" prefWidth="177.0" text="name" />
+          <TableColumn fx:id="elementSurname" prefWidth="179.0" text="surname" />
+        </columns>
+      </TableView>
+      <Button fx:id="addButton" layoutX="430.0" layoutY="377.0" mnemonicParsing="false" onAction="#handleAdd" prefHeight="24.0" prefWidth="63.0" text="Add" />
+      <Button fx:id="searchButton" layoutX="430.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
+      <MenuButton layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Tables">
+        <items>
+          <MenuItem fx:id="passengerTable" mnemonicParsing="false" onAction="#switchToPassengers" text="Passengers" />
+          <MenuItem fx:id="employeeTable" mnemonicParsing="false" onAction="#switchToEmployees" text="Employees" />
+        </items>
+      </MenuButton>
+      <TextField fx:id="surnameField" layoutX="136.0" layoutY="14.0" prefHeight="24.0" prefWidth="284.0" promptText="Surname" />
+   </children>
+</AnchorPane>

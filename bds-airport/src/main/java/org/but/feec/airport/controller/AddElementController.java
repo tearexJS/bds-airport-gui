@@ -1,12 +1,13 @@
 package org.but.feec.airport.controller;
 
-import org.but.feec.airport.data.PassengerRepository;
-import org.but.feec.airport.service.PassengerService;
+import org.but.feec.airport.data.InjectionRepository;
+import org.but.feec.airport.service.InjectionService;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.core.joran.spi.ElementSelector;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -19,38 +20,51 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.event.EventHandler;
 
-public class UpdatePassengerEmail {
-    private static final Logger logger = LoggerFactory.getLogger(UpdatePassengerEmail.class);
+public class AddElementController {
+    private static final Logger logger = LoggerFactory.getLogger(AdminViewController.class);
     @FXML
-    private TextField newEmailField;
-
-    @FXML
-    private TextField oldEmailField;
+    private TextField nameField;
 
     @FXML
     private Button submit;
 
+    @FXML
+    private TextField surnameField;
+    private InjectionRepository injectionRepository;
+    private InjectionService injectionService;
     private ValidationSupport validation;
-    private PassengerRepository passengerRepository;
-    private PassengerService passengerService;
+    
     @FXML
-    public void initialize(){
-        initializeValidations();
+    void initialize(){
         initializeServices();
-        logger.info("UpdatePassengerEmailController initialized");
+        initializeValidations();
+        logger.info("AddElementController initialized successfuly");
     }
+
     @FXML
-    void handleUpdateEmail(ActionEvent event) {
-        boolean result = passengerService.updatePassengerEmail(oldEmailField.getText(), newEmailField.getText());
+    void handleSubmit(ActionEvent event) {
+        boolean result = injectionService.addElement(nameField.getText(), surnameField.getText());
         if(result){
-            handleSuccessfulQuery("Passengers email updated successfuly");
+            handleSuccessfulQuery("Element added successfuly");
             Stage stageOld = (Stage) submit.getScene().getWindow();
             stageOld.close();
         }
         else{
-            handleFailedQuery("Failed to update passengers email");
+            handleFailedQuery("Failed to add element");
         }
     }
+    private void initializeServices(){
+        this.injectionRepository = new InjectionRepository();
+        this.injectionService = new InjectionService(injectionRepository);
+    }
+
+    private void initializeValidations(){
+        validation = new ValidationSupport();
+        validation.registerValidator(nameField, Validator.createEmptyValidator("In order to add it's required to fill this field"));
+        validation.registerValidator(surnameField, Validator.createEmptyValidator("In order to add it's required to fill this field"));
+        submit.disableProperty().bind(validation.invalidProperty());
+    }
+
     private void handleSuccessfulQuery(String queryDescription){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Query successful");
@@ -86,15 +100,5 @@ public class UpdatePassengerEmail {
         idlestage.play();
 
         alert.showAndWait();
-    }
-    private void initializeValidations(){
-        validation = new ValidationSupport();
-        validation.registerValidator(oldEmailField, Validator.createEmptyValidator("The old email must not be empty."));
-        validation.registerValidator(newEmailField, Validator.createEmptyValidator("The new email must not be empty."));
-        submit.disableProperty().bind(validation.invalidProperty());
-    }
-    private void initializeServices(){
-        passengerRepository = new PassengerRepository();
-        passengerService = new PassengerService(passengerRepository);
     }
 }

@@ -15,5 +15,8 @@ public class AdminService {
     public List<Passenger> showAllPassengers(){
         return adminRepository.showAllPassengers();
     }
+    public List<Passenger> findPassengers(String surname){
+        return adminRepository.findPassengerBySurname(surname);
+    }
 
 }

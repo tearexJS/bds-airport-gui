@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.event.EventHandler;
 
@@ -55,6 +56,8 @@ public class CreatePassengerController {
        clearTextFields();
        if(result){
             handleSuccessfulQuery("Passenger created successfuly");
+            Stage stageOld = (Stage) submit.getScene().getWindow();
+            stageOld.close();
        }
        else{
             handleFailedQuery("Failed to create new passenger");

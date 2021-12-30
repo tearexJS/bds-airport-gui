@@ -2,7 +2,9 @@ package org.but.feec.airport.controller;
 
 import org.but.feec.airport.data.LoginRepository;
 import org.but.feec.airport.service.AuthService;
+import org.but.feec.airport.service.EmailHolderService;
 import org.but.feec.airport.App;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -76,6 +78,7 @@ public class LoginController {
             int authenticated = auth.authenticate(email, password);
             switch(authenticated){
                 case 1:
+                    handlePassengerLogin();
                     showAuthSucces();
                     break;
                 case 2:
@@ -98,9 +101,10 @@ public class LoginController {
     private void handlePassengerLogin() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(App.class.getResource("fxml/Main.fxml"));
+            fxmlLoader.setLocation(App.class.getResource("fxml/TicketView.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 614, 350);
             Stage stage = new Stage();
+            stage.setUserData(EmailHolderService.getInstance().getEmail());
             stage.setTitle("Your courses");
             stage.setScene(scene);
 
