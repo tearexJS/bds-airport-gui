@@ -24,7 +24,7 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+//TODO: validators
 public class InjectionController {
     private static final Logger logger = LoggerFactory.getLogger(InjectionController.class);
     @FXML

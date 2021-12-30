@@ -3,19 +3,15 @@ package org.but.feec.airport.api;
 import javafx.beans.property.*;
 
 public class TicketView {
-    private StringProperty name = new SimpleStringProperty();
-    private StringProperty surname = new SimpleStringProperty();
+    private StringProperty destination = new SimpleStringProperty();
     private IntegerProperty idFlight = new SimpleIntegerProperty();
     private StringProperty airline = new SimpleStringProperty();
     private StringProperty gate = new SimpleStringProperty();
     private StringProperty flightClass = new SimpleStringProperty();
     private DoubleProperty cost = new SimpleDoubleProperty();
 
-    public String getName() {
-        return name.get();
-    }
-    public String getSurname() {
-        return surname.get();
+    public String getDestination() {
+        return destination.get();
     }
     public int getIdFlight() {
         return idFlight.get();
@@ -33,11 +29,8 @@ public class TicketView {
         return cost.get();
     }
 
-    public void setName(String name) {
-        this.name.setValue(name);
-    }
-    public void setSurname(String surname) {
-        this.surname.setValue(surname);
+    public void setDestination(String destination) {
+        this.destination.setValue(destination);
     }
     public void setIdFlight(int idFlight) {
         this.idFlight.setValue(idFlight);
@@ -58,8 +51,7 @@ public class TicketView {
     @Override
     public String toString() {
         return "Ticket{" + 
-        "name="+this.name+
-        "surname="+this.surname+
+        "name="+this.destination+
         "id_flight"+ idFlight+
         "airline="+ this.airline+
         "gate="+this.gate+
