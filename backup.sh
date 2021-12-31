@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir -p ~/backups
-docker exec -i postgres_container pg_dumpall -c -U postgres > ~/backups/dump_$(date +%Y-%m-%d"_"%H:%M:%S).sql
+docker exec -i postgres_container pg_dumpall -c -U root > ~/backups/dump_$(date +%Y-%m-%d"_"%H:%M:%S).sql
 
 # compress last month
 older=$(date -d "`date +%Y-%m-%d` -1month" +%Y-%m-%d)
