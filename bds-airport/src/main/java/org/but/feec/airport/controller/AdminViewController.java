@@ -131,20 +131,11 @@ public class AdminViewController {
         adminsView.getItems().clear();
         adminsView.setItems(adminViewList);
     }
-    //TODO: delete this
-    @FXML
-    void handleShowAll(ActionEvent event) {
-
-    }
 
     @FXML
     void handleUpdate(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         loadFxml(fxmlLoader, "fxml/UpdateEmail.fxml", "Change email");
-    }
-    @FXML
-    void switchToEmployees(ActionEvent event) {
-
     }
 
     @FXML

@@ -21,7 +21,6 @@
       <MenuButton layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Tables">
         <items>
           <MenuItem fx:id="passengerTable" mnemonicParsing="false" onAction="#switchToPassengers" text="Passengers" />
-          <MenuItem fx:id="employeeTable" mnemonicParsing="false" onAction="#switchToEmployees" text="Employees" />
         </items>
       </MenuButton>
       <TextField fx:id="surnameField" layoutX="136.0" layoutY="14.0" prefHeight="24.0" prefWidth="284.0" promptText="Surname" />

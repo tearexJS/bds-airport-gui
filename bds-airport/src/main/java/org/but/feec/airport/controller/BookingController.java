@@ -1,24 +1,20 @@
 package org.but.feec.airport.controller;
 
-import org.but.feec.airport.App;
-import org.but.feec.airport.api.TicketView;
-import org.but.feec.airport.data.TicketRepository;
-import org.but.feec.airport.service.EmailHolderService;
-import org.but.feec.airport.service.TicketService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.scene.control.TableView;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+import javafx.scene.control.ComboBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert;
 import javafx.animation.KeyFrame;
@@ -26,17 +22,29 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.event.EventHandler;
 
-public class TicketViewController {
-    private static final Logger logger = LoggerFactory.getLogger(TicketViewController.class);
+
+import org.but.feec.airport.api.TicketView;
+import org.but.feec.airport.service.EmailHolderService;
+import org.but.feec.airport.service.TicketService;
+import org.but.feec.airport.data.TicketRepository;
+
+public class BookingController {
+    private static final Logger logger = LoggerFactory.getLogger(BookingController.class);
 
     @FXML
     private Button bookButton;
 
     @FXML
-    private Button deleteButton;
+    private Button searchButton;
 
     @FXML
-    private TableColumn<TicketView, Double> cost;
+    private TextField destinationField;
+
+    @FXML
+    private TableView<TicketView> bookingTable;
+
+    @FXML
+    private TableColumn<TicketView, String> departureTime;
 
     @FXML
     private TableColumn<TicketView, String> destination;
@@ -48,84 +56,81 @@ public class TicketViewController {
     private TableColumn<TicketView, String> gate;
 
     @FXML
-    private TableColumn<TicketView, String> airlineName;
+    private TableColumn<TicketView, String> airline;
+
 
     @FXML
-    private TableColumn<TicketView, String> flightClass;
+    private ComboBox<String> classBox;
 
-    @FXML
-    private TableView<TicketView> ticketTable;
-    
-    private String email;
+
     private TicketRepository ticketRepository;
     private TicketService ticketService;
-
+    private ValidationSupport validation;
 
     @FXML
-    void initialize(){
+    public void initialize(){
 
         flightId.setCellValueFactory(new PropertyValueFactory<TicketView, Long>("idFlight"));
         gate.setCellValueFactory(new PropertyValueFactory<TicketView, String>("gate"));
         destination.setCellValueFactory(new PropertyValueFactory<TicketView, String>("destination"));
-        cost.setCellValueFactory(new PropertyValueFactory<TicketView, Double>("cost"));
-        airlineName.setCellValueFactory(new PropertyValueFactory<TicketView, String>("airline"));
-        flightClass.setCellValueFactory(new PropertyValueFactory<TicketView, String>("flightClass"));
-        email = EmailHolderService.getInstance().getEmail();
+        departureTime.setCellValueFactory(new PropertyValueFactory<TicketView, String>("departureTime"));
+        airline.setCellValueFactory(new PropertyValueFactory<TicketView, String>("airline"));
 
         initializeServices();
-        showPassengersTickets();
-
-
+        initializeValidations();
+        initializeFlightClass();
+    }
+    @FXML
+    void hadnleSearch(ActionEvent event) {
+        showAvailableTickets();
     }
 
     @FXML
     void handleBooking(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        loadFxml(fxmlLoader, "fxml/BookingView.fxml", "Booking");
-    }
-    @FXML
-    void handleDelete(ActionEvent event) {
-        TicketView ticket = ticketTable.getSelectionModel().getSelectedItem();
+        TicketView ticketView = bookingTable.getSelectionModel().getSelectedItem();
+        String flightClass = classBox.getSelectionModel().getSelectedItem();
         String email = EmailHolderService.getInstance().getEmail();
-        if(ticket == null){
-            handleFailedQuery("You need to select both ticket and class");
+        if(ticketView == null || flightClass == null){
+            handleFailedQuery("You need to select both a ticket and class");
         }
         else{
-            boolean result = ticketService.deleteTicket(ticket, email);
+            boolean result = ticketService.bookTicket(ticketView, flightClass, email);
             if(result){
-                handleSuccessfulQuery("Ticket deleted successfuly");
+                handleSuccessfulQuery("Ticket successfuly booked");
+                Stage stage = (Stage) bookButton.getScene().getWindow();
+                stage.close();
             }
             else{
-                handleFailedQuery("Failed to delete ticket");
+                handleFailedQuery("Failed to book the ticket");
             }
         }
+
     }
 
-    private void showPassengersTickets(){
-        try{
-            ObservableList<TicketView> tickets = FXCollections.observableArrayList(ticketService.showPassengersTickets(email));
-            ticketTable.setItems(tickets);
-        }catch(Exception e){
-            logger.error(e.getMessage());
-        }
-    }
     private void initializeServices(){
         this.ticketRepository = new TicketRepository();
         this.ticketService = new TicketService(ticketRepository);
     }
-    private void loadFxml(FXMLLoader fxmlLoader, String path, String title){
+    private void initializeValidations(){
+        validation = new ValidationSupport();
+        validation.registerValidator(destinationField, Validator.createEmptyValidator("The username must not be empty."));
+        searchButton.disableProperty().bind(validation.invalidProperty());
+        bookButton.disableProperty().bind(validation.invalidProperty());
+    }
+    private void initializeFlightClass(){
         try{
-            fxmlLoader.setLocation(App.class.getResource(path));
+            ObservableList<String> classes = FXCollections.observableArrayList(ticketService.loadFlightClasses());
+            classBox.setItems(classes);
+        }catch(NullPointerException e){
 
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-
-            stage.setTitle(title);
-            stage.setScene(scene);
-            stage.show();
+        }
+    }
+    private void showAvailableTickets(){
+        try{
+            ObservableList<TicketView> tickets = FXCollections.observableArrayList(ticketService.searchForTickets(destinationField.getText()));
+            bookingTable.setItems(tickets);
         }catch(Exception e){
-            e.printStackTrace();
-            logger.error("Authentication successful but a FXML loading error occured", e.getMessage());
+            logger.error(e.getMessage());
         }
     }
     private void handleSuccessfulQuery(String queryDescription){
@@ -164,4 +169,5 @@ public class TicketViewController {
 
         alert.showAndWait();
     }
+
 }

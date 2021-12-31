@@ -99,7 +99,7 @@ public class CreatePassengerController {
 
         alert.showAndWait();
     }
-    //TODO: implement window closing
+
     private void clearTextFields(){
         firstNameField.clear();
         surnameField.clear();

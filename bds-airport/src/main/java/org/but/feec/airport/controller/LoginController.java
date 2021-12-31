@@ -2,7 +2,6 @@ package org.but.feec.airport.controller;
 
 import org.but.feec.airport.data.LoginRepository;
 import org.but.feec.airport.service.AuthService;
-import org.but.feec.airport.service.EmailHolderService;
 import org.but.feec.airport.App;
 
 import javafx.animation.KeyFrame;
@@ -60,6 +59,11 @@ public class LoginController {
         initializeServices();
         logger.info("LoginController initialized");
     }
+    @FXML
+    void handleLogin(){
+        handleSignIn();
+    }
+
     private void initializeValidations(){
         validation = new ValidationSupport();
         validation.registerValidator(emailField, Validator.createEmptyValidator("The username must not be empty."));
@@ -102,10 +106,10 @@ public class LoginController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(App.class.getResource("fxml/TicketView.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 614, 350);
+            Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
-            stage.setUserData(EmailHolderService.getInstance().getEmail());
-            stage.setTitle("Your courses");
+
+            stage.setTitle("Your tickets");
             stage.setScene(scene);
 
             Stage stageOld = (Stage) loginButton.getScene().getWindow();
@@ -115,7 +119,7 @@ public class LoginController {
         }
         catch (IOException e) {
             e.printStackTrace();
-            logger.error(String.format("Authentication successful but a FXML loading error occured", e.getMessage()));
+            logger.error(String.format("Authentication successful but an FXML loading error occured", e.getMessage()));
         }
         showAuthSucces();
     }

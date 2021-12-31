@@ -7,7 +7,7 @@ import org.controlsfx.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.core.joran.spi.ElementSelector;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -30,6 +30,7 @@ public class AddElementController {
 
     @FXML
     private TextField surnameField;
+    
     private InjectionRepository injectionRepository;
     private InjectionService injectionService;
     private ValidationSupport validation;

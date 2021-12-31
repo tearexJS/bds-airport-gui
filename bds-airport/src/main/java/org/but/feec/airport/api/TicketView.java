@@ -8,6 +8,7 @@ public class TicketView {
     private StringProperty airline = new SimpleStringProperty();
     private StringProperty gate = new SimpleStringProperty();
     private StringProperty flightClass = new SimpleStringProperty();
+    private StringProperty departureTime = new SimpleStringProperty();
     private DoubleProperty cost = new SimpleDoubleProperty();
 
     public String getDestination() {
@@ -28,6 +29,9 @@ public class TicketView {
     public double getCost() {
         return cost.get();
     }
+    public String getDepartureTime() {
+        return departureTime.get();
+    }
 
     public void setDestination(String destination) {
         this.destination.setValue(destination);
@@ -46,6 +50,9 @@ public class TicketView {
     }
     public void setCost(double cost) {
         this.cost.setValue(cost);
+    }
+    public void setDepartureTime(String departureTime) {
+        this.departureTime.setValue(departureTime);
     }
 
     @Override

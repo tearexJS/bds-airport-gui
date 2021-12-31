@@ -1,7 +1,5 @@
 package org.but.feec.airport.data;
 
-import org.but.feec.airport.*;
-
 import org.but.feec.airport.api.Passenger;
 import org.but.feec.airport.config.*;
 import java.sql.*;

@@ -19,4 +19,9 @@ public class InjectionView {
     public void setSurname(String surname) {
         this.surname.setValue(surname);
     }
+    @Override
+    public String toString() {
+        return "name "+name.get()+
+                "surname "+ surname.get();
+    }
 }

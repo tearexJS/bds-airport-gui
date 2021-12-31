@@ -1,6 +1,6 @@
 package org.but.feec.airport.controller;
 
-import java.util.List;
+
 
 import org.but.feec.airport.App;
 import org.but.feec.airport.api.InjectionView;
@@ -20,11 +20,12 @@ import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//TODO: validators
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 public class InjectionController {
     private static final Logger logger = LoggerFactory.getLogger(InjectionController.class);
     @FXML
@@ -50,6 +51,7 @@ public class InjectionController {
 
     private InjectionRepository injectionRepository;
     private InjectionService injectionService;
+    private ValidationSupport validation;
 
 
     @FXML
@@ -57,6 +59,7 @@ public class InjectionController {
         elementName.setCellValueFactory(new PropertyValueFactory<InjectionView, String>("name"));
         elementSurname.setCellValueFactory(new PropertyValueFactory<InjectionView, String>("surname"));
         initializeServices();
+        initializeValidations();
         showAll();
         logger.info("InjectionController initialized");
     }
@@ -69,9 +72,13 @@ public class InjectionController {
 
     @FXML
     void handleSearch(ActionEvent event) {
-        ObservableList<InjectionView> searchResult = FXCollections.observableArrayList(injectionService.findElement(surnameField.getText()));
-        injectionView.getItems().clear();
-        injectionView.setItems(searchResult);
+        try{
+            ObservableList<InjectionView> searchResult = FXCollections.observableArrayList(injectionService.findElement(surnameField.getText()));
+            injectionView.getItems().clear();
+            injectionView.setItems(searchResult);
+        }catch(NullPointerException e){
+            logger.error("Table does not exist anymore" + e.getMessage());
+        }
     }
     @FXML
     void handleRefresh(ActionEvent event) {
@@ -84,13 +91,15 @@ public class InjectionController {
         Stage stageOld = (Stage) addButton.getScene().getWindow();
         stageOld.close();
     }
-    @FXML 
-    void switchToEmployees(){
 
-    }
     private void initializeServices(){
         this.injectionRepository = new InjectionRepository();
         this.injectionService = new InjectionService(injectionRepository); 
+    }
+    private void initializeValidations(){
+        validation = new ValidationSupport();
+        validation.registerValidator(surnameField, Validator.createEmptyValidator("In order to add it's required to fill this field"));
+        searchButton.disableProperty().bind(validation.invalidProperty());
     }
 
     private void loadFxml(FXMLLoader fxmlLoader, String path, String title){

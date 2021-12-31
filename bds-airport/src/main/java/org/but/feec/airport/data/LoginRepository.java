@@ -2,13 +2,14 @@ package org.but.feec.airport.data;
 
 import org.but.feec.airport.api.*;
 import org.but.feec.airport.config.DataSourceConfig;
-//import org.but.feec.airport.exceptions.DataAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 
 public class LoginRepository {
-    
+    private static final Logger logger = LoggerFactory.getLogger(LoginRepository.class);
     public AuthView findPersonByEmail(String email){
         try(Connection conn = DataSourceConfig.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT email, password, role FROM(SELECT email, password, position AS role FROM airport.employee JOIN airport.employee_type ON employee.id_employee_type = employee_type.id_employee_type UNION SELECT email, password, 'passenger' AS role FROM airport.contact) AS person WHERE email = ?")
@@ -20,8 +21,7 @@ public class LoginRepository {
 
             }
         }catch(SQLException e){
-            e.printStackTrace();
-            //TODO: implement logger
+            logger.error("Failed to retrieve user data for authetication" + e.getMessage());
         }
         return null;
     }

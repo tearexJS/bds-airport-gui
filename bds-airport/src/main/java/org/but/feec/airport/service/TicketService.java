@@ -15,4 +15,16 @@ public class TicketService {
     public List<TicketView> showPassengersTickets(String email){
         return ticketRepository.showPassengersTickets(email);
     }
+    public List<TicketView> searchForTickets(String destination){
+        return ticketRepository.availableTickets(destination);
+    }
+    public List<String> loadFlightClasses(){
+        return ticketRepository.loadFlightClasses();
+    }
+    public Boolean bookTicket(TicketView ticket, String flightClass, String email){
+        return ticketRepository.bookTicket(ticket, flightClass, email);
+    }
+    public Boolean deleteTicket(TicketView ticket, String email){
+       return ticketRepository.deleteTicket(ticket, email);
+    }
 }

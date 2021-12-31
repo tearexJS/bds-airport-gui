@@ -50,5 +50,13 @@ public class Passenger {
     public void setContactId(long contactId) {
         this.contactId.setValue(contactId);
     }
-    // TODO: implement toString()
+    @Override
+    public String toString() {
+        return "name: "+ name.get()+
+                "surname "+ surname.get()+
+                "email "+ email.get()+
+                "phone number "+ phoneNumber.get()+
+                "id contact "+ Long.toString(contactId.get());   
+
+    }
 }

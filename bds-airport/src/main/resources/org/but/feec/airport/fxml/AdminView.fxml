@@ -21,17 +21,15 @@
         </columns>
       </TableView>
       <Button fx:id="addPassenger" layoutX="89.0" layoutY="540.0" mnemonicParsing="false" onAction="#handleAddPassenger" prefHeight="24.0" prefWidth="133.0" text="Add passenger" />
-      <Button fx:id="refresh" layoutX="738.0" layoutY="113.0" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="24.0" prefWidth="73.0" text="Refresh" />
-      <Button fx:id="showAll" layoutX="738.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleShowAll" text="Show all" />
-      <Button fx:id="search" layoutX="657.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleOnSearch" prefHeight="24.0" prefWidth="73.0" text="Search" />
+      <Button fx:id="refresh" layoutX="739.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="24.0" prefWidth="73.0" text="Refresh" />
       <Button fx:id="deletePassenger" layoutX="343.0" layoutY="540.0" mnemonicParsing="false" onAction="#handleDeletePassenger" text="Delete passenger" />
       <Button fx:id="update" layoutX="597.0" layoutY="540.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="24.0" prefWidth="133.0" text="Update" />
       <TextField fx:id="surnameField" layoutX="232.0" layoutY="28.0" prefHeight="24.0" prefWidth="412.0" promptText="Surname" />
       <MenuButton layoutX="23.0" layoutY="16.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="105.0" text="Tables">
         <items>
           <MenuItem fx:id="injectionTable" mnemonicParsing="false" onAction="#switchToInjection" text="SQL injection training" />
-          <MenuItem fx:id="employeeTable" mnemonicParsing="false" onAction="#switchToEmployees" text="Employees" />
         </items>
       </MenuButton>
+      <Button fx:id="search" layoutX="664.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleOnSearch" text="Search" />
    </children>
 </AnchorPane>
